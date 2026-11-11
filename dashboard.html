@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Testes – Cadastro de Funcionários | Funerária Bom Despacho</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-container">
+            <a href="index.html" class="brand" title="Voltar para a Tela Inicial">
+                <img src="logo.png" alt="Logo Funerária Bom Despacho" class="brand-logo" onerror="this.style.display='none'">
+                <div>
+                    <h1>Funerária Bom Despacho</h1>
+                    <p>Área de Atuação: Serviço Funerário, Tanatopraxia e Biossegurança</p>
+                    <small style="color: var(--accent-gold); font-weight: 700;">Dashboard de Testes – Cadastro de Funcionários</small>
+                </div>
+            </a>
+            
+            <nav class="header-nav">
+                <a href="index.html" class="btn btn-outline"><i class="fa-solid fa-house"></i> Início</a>
+                <a href="cadastro.html" class="btn btn-outline"><i class="fa-solid fa-arrow-left"></i> Ir para o Cadastro</a>
+                <button type="button" class="btn btn-outline" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Exportar CSV</button>
+                <button type="button" class="btn btn-sage" onclick="resetData()"><i class="fa-solid fa-rotate-right"></i> Resetar Matriz</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+
+        <section class="card-section" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+            <div class="section-header" style="margin-bottom: 1rem; padding-bottom: 0.5rem;">
+                <h2><i class="fa-solid fa-chart-line"></i> Resumo de Qualidade e Cobertura de QA</h2>
+            </div>
+            
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <span>Total de Casos de Teste</span>
+                    <h2 id="kpi-total">0</h2>
+                </div>
+                <div class="kpi-card">
+                    <span>Quantidade PASSOU</span>
+                    <h2 id="kpi-pass" style="color: var(--success)">0</h2>
+                </div>
+                <div class="kpi-card">
+                    <span>Quantidade FALHOU</span>
+                    <h2 id="kpi-fail" style="color: var(--danger)">0</h2>
+                </div>
+                <div class="kpi-card">
+                    <span>Taxa de Aprovação</span>
+                    <h2 id="kpi-rate" style="color: var(--primary-sage)">0%</h2>
+                </div>
+            </div>
+
+            <div style="margin-top: 1rem;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">
+                    <span>Proporção PASSOU vs FALHOU:</span>
+                    <span id="chart-label">100% PASSOU</span>
+                </div>
+                <div style="width: 100%; height: 16px; background: #fee2e2; border-radius: 8px; overflow: hidden; display: flex;">
+                    <div id="chart-pass-bar" style="width: 100%; height: 100%; background: var(--success); transition: width 0.4s ease;"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card-section">
+            <div class="table-header" style="border-radius: var(--radius-sm); margin-bottom: 1.2rem;">
+                <h3><i class="fa-solid fa-list-check"></i> Matriz de Execução de Testes (8 Colunas Oficial)</h3>
+                <div class="filter-group">
+                    <select id="filter-tipo" onchange="renderTableQA()">
+                        <option value="ALL">Todos os Tipos (Requisitos / Bloqueio)</option>
+                        <option value="Requisitos">Tipo: Requisitos</option>
+                        <option value="Bloqueio">Tipo: Bloqueio</option>
+                    </select>
+                    <select id="filter-status" onchange="renderTableQA()">
+                        <option value="ALL">Todos os Status (PASSOU / FALHOU)</option>
+                        <option value="PASSOU">Status: PASSOU</option>
+                        <option value="FALHOU">Status: FALHOU</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%;">ID</th>
+                            <th style="width: 10%;">Tipo de Teste</th>
+                            <th style="width: 13%;">Caso de Teste (CT)</th>
+                            <th style="width: 15%;">O que foi testado</th>
+                            <th style="width: 22%;">Como foi testado</th>
+                            <th style="width: 15%;">Resultado Esperado</th>
+                            <th style="width: 12%;">Resultado Obtido</th>
+                            <th style="width: 7%;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="test-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card-section" style="margin-top: 1.5rem; padding: 1.5rem;">
+            <div class="section-header" style="margin-bottom: 0.8rem; padding-bottom: 0.4rem;">
+                <h3><i class="fa-solid fa-desktop"></i> Ambientes e Navegadores Homologados</h3>
+            </div>
+            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.9rem;">
+                <span><i class="fa-brands fa-chrome" style="color: #4285F4;"></i> Google Chrome (Desktop): <strong>PASSOU</strong></span>
+                <span><i class="fa-brands fa-firefox-browser" style="color: #FF7139;"></i> Mozilla Firefox: <strong>PASSOU</strong></span>
+                <span><i class="fa-brands fa-edge" style="color: #0078D7;"></i> Microsoft Edge: <strong>PASSOU</strong></span>
+                <span><i class="fa-solid fa-mobile-screen-button" style="color: var(--primary-sage);"></i> Dispositivo Mobile (F12): <strong>PASSOU</strong></span>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <p><strong>Data de Execução dos Testes:</strong> 11/11/2026 | <strong>Responsáveis pelo Teste (QA):</strong> Davi e Juliano</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
